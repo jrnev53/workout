@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testing</title>
+        <style>                         /* A CSS stylesheet for the clock */
+            #clock {                        /* Styles apply to element with id="clock" */
+              font: bold 24px sans-serif;   /* Use a big bold font */
+              background: #ddf;             /* on a light bluish-gray background. */
+              padding: 15px;                /* Surround it with some space */
+              border: solid black 2px;      /* and a solid black border */
+              border-radius: 10px;          /* with rounded corners. */
+            }
+            #TOC { border: solid black 1px; margin: 10px; padding: 10px; }
+            .TOCEntry { margin: 5px 0px; }
+            .TOCEntry a { text-decoration: none; }
+            .TOCLevel1 { font-size: 16pt; font-weight: bold; }
+            .TOCLevel2 { font-size: 14pt; margin-left: .25in; }
+            .TOCLevel3 { font-size: 12pt; margin-left: .5in; }
+            .TOCSectNum:after { content: ": "; }
+        </style>
+    </head>
+    <body>
+        <h1>Table of contents</h1>
+        <div id="TOC"></div>
+        <h1>Digital Clock 2</h1>    <!-- Display a title. -->
+        <span id="clock"></span>  <!-- We will insert the time into this element. -->
+        <script src="scripts/digital_clock.js"></script>
+
+        <button id="mybutton">Click me</button>
+        <script>
+            let b = document.querySelector("#mybutton");
+            b.onclick = function() { console.log("Thanks for clicking me!");};
+            b.addEventListener("click",() => { console.log("Thanks again!");}) ;
+        </script>
+
+        <h2>Tow</h2>
+            <h3>Time</h3>
+                <h4>Tiny</h4>
+                This is a test
+        <h2>Stop</h2>
+        <h2>Ready</h2>
+            <h3>Ranger</h3>
+    </body>
+    <script src="scripts/TOC.js"></script>
+</html>
