@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Testing</title>
+        <style>                         /* A CSS stylesheet for the clock */
+            #clock {                        /* Styles apply to element with id="clock" */
+              font: bold 24px sans-serif;   /* Use a big bold font */
+              background: #ddf;             /* on a light bluish-gray background. */
+              padding: 15px;                /* Surround it with some space */
+              border: solid black 2px;      /* and a solid black border */
+              border-radius: 10px;          /* with rounded corners. */
+            }
+            #TOC { border: solid black 1px; margin: 10px; padding: 10px; }
+            .TOCEntry { margin: 5px 0px; }
+            .TOCEntry a { text-decoration: none; }
+            .TOCLevel1 { font-size: 16pt; font-weight: bold; }
+            .TOCLevel2 { font-size: 14pt; margin-left: .25in; }
+            .TOCLevel3 { font-size: 12pt; margin-left: .5in; }
+            .TOCSectNum:after { content: ": "; }
+
+            #map {
+                stroke: black;
+                stroke-width: 3;
+                stroke-linecap: round;
+                fill: #ffe
+            }
+
+            #rowselected {
+                background-color: #6ccbfb;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        Test
+        <p/>
+        <!-- These fields allow editing of the table. They are linked to the currently selected table. -->
+        <div id="formContainer">
+            <label for="pointName">Point:</label><input type="text" id="pointName" placeholder="point...">
+            <label for="description">Description:</label><input type="text" id="description" placeholder="description...">
+            <label for="direction">Direction:</label><input type="number" id="direction" placeholder="direction...">
+            <label for="magnitude">Magnitude:</label><input type="number" id="magnitude" placeholder="magnitude...">
+            <label for="xcoord">X:</label><input type="number" id="xcoord" placeholder="X...">
+            <label for="ycoord">Y:</label><input type="number" id="ycoord" placeholder="Y...">
+        </div>
+        <table id="mapping" class="editable">
+            <thead>
+                <tr>
+                    <th>Point</th><th>Description</th><th>Direction</th><th>Magnitude</th><th>X</th><th>Y</th>
+                </tr>
+            </thead>
+        </table>
+        <button id="newrowbutton">New Row</button>
+        <script>
+            function selectRowForEdit(evt) {
+                console.log('Entered selectRowForEdit') ;
+                // console.log(evt) ;
+                // console.log(typeof evt.target) ;
+                // console.log(Object.prototype.toString.call(evt.target)) ;
+                // The event happens on the cells, but we want to copy the row
+                var currentCell = evt.target ;
+                currentRow = evt.target.parentElement ;
+                // console.log(currentRow) ;
+
+                // // TODO highlight the row that's being edited
+                currentRow.className = 'rowselected' ;
+
+                // copy data from the row
+                pointName.value = currentRow.cells[0].innerText ;
+                description.value = currentRow.cells[1].innerText ;
+                direction.value = currentRow.cells[2].innerText ;
+                magnitude.value = currentRow.cells[3].innerHTML ;
+                xcoord.value = currentRow.cells[4].innerText ;
+                ycoord.value = currentRow.cells[5].innerText ;
+                
+                // for (let index = 0; index < fields.length; index++) {
+                //     // const element = fields[index];
+                //     currentRow.cells[index] = fields[index].value ;
+                // }
+                // listen to changes to update other fields, then update the cells in the row
+                console.log('exiting selectRowForEdit') ;
+            }
+
+            var testnum = 1
+            function addMappingRow(evt) {
+                console.log('Entered addMappingRow') ;
+                row = table.insertRow() ;
+                row.insertCell() ; // point name
+                row.insertCell() ; // description
+                row.insertCell().innerText = "0.0"; // direction
+                row.insertCell().innerText = "0" ;// magnitude
+                testnum++ ;
+                row.insertCell().innerText = testnum.toString() ;// x co-ordinate
+                row.insertCell().innerText = "0.0" ; // y co-ordinate
+
+                row.addEventListener("click", selectRowForEdit) ;
+                // put this row into the editing fields
+                row.click() ;
+                console.log('Exiting addMappingRow') ;
+            }
+
+            var currentRow ;
+            // Get input fields
+            let pointName = document.getElementById("pointName");
+            let description = document.getElementById("description");
+            let direction = document.getElementById("direction");
+            let magnitude = document.getElementById("magnitude");
+            let xcoord = document.getElementById("xcoord");
+            let ycoord = document.getElementById("ycoord");
+
+            var titles = [ "Point Name", "Description", "Direction", "Magnitude", "X", "Y" ] ;
+            var attributes = [ "pointname", "description", "direction", "magnitude", "x", "y" ] ;
+
+            var table = document.getElementById("mapping"); 
+            var newrowbutton= document.getElementById("newrowbutton") ;
+            newrowbutton.addEventListener("click", addMappingRow);
+            // add an initial row
+            // newrowbutton.click() ;
+        </script>
+
+    </body>
+    
+</html>

@@ -17,6 +17,13 @@
             .TOCLevel2 { font-size: 14pt; margin-left: .25in; }
             .TOCLevel3 { font-size: 12pt; margin-left: .5in; }
             .TOCSectNum:after { content: ": "; }
+
+            #map {
+                stroke: black;
+                stroke-width: 3;
+                stroke-linecap: round;
+                fill: #ffe
+            }
         </style>
     </head>
     <body>
@@ -33,6 +40,195 @@
             b.addEventListener("click",() => { console.log("Thanks again!");}) ;
         </script>
 
+        <p/>
+        Test
+        <p></p>
+        <!-- <label for="direction">Direction</label>    <input id="direction" type="text" /> <br/>
+        <label for="magnitude">Magnitude</label>    <input id="magnitude" type="text" /><br/>
+        <label for="xcoord">X Co-ord</label>        <input id="xcoord" type="text" /><br/>
+        <label for="ycoord">Y Co-ord</label>        <input id="ycoord" type="text" /><br/>
+        <script>
+            function doCalc(evt) {
+                console.log("do calc!") ;
+                console.log(evt) ;
+                console.log(evt.target) ;
+                console.log(evt.target.value) ;
+                console.log(evt.target.id) ;
+                // console.log(this.value) ;
+
+                directionField = document.querySelector("#direction") ;
+                magnitudeField = document.querySelector("#magnitude") ;
+                xcoordField = document.querySelector("#xcoord") ;
+                ycoordField = document.querySelector("#ycoord") ;
+                changedField = evt.target ;
+                if (changedField == directionField || changedField == magnitudeField) {
+                    console.log('Vector changed') ;
+                    // =cos(D2*(pi()/180))*C2
+                    dirValue = parseFloat(directionField.value) ;
+                    magValue = parseFloat(magnitudeField.value) ;
+                    newX = Math.cos(dirValue * (Math.PI/180)) * magValue ;
+                    newY = Math.sin(dirValue * (Math.PI/180)) * magValue ;
+                    xcoordField.value = newX ;
+                    ycoordField.value = newY ;
+                } else {
+                    console.log('Co-ordinates changed') ;
+                }
+                
+            }
+            directionField = document.querySelector("#direction") ;
+            magnitudeField = document.querySelector("#magnitude") ;
+            xcoordField = document.querySelector("#xcoord") ;
+            ycoordField = document.querySelector("#xcoord") ;
+            // Listening on event "blur" will capture when the user's focus leaves the field, i.e. they are done editing.
+            // "input" will capture whenever the field is modified
+            // "change" will capture when a modified field loses focus
+            eventToWatch="change" ;
+            directionField.addEventListener(eventToWatch, doCalc) ;
+            magnitudeField.addEventListener(eventToWatch, doCalc) ;
+            xcoordField.addEventListener(eventToWatch, doCalc) ;
+            ycoordField.addEventListener(eventToWatch, doCalc) ;
+        </script> -->
+
+        <p/>
+        <!-- These fields allow editing of the table. They are linked to the currently selected table. -->
+        <div id="formContainer">
+            <label for="pointName">Point:</label><input type="text" id="pointName" placeholder="point...">
+            <label for="description">Description:</label><input type="text" id="description" placeholder="description...">
+            <label for="direction">Direction:</label><input type="number" id="direction" placeholder="direction...">
+            <label for="magnitude">Magnitude:</label><input type="number" id="magnitude" placeholder="magnitude...">
+            <label for="xcoord">X:</label><input type="number" id="xcoord" placeholder="X...">
+            <label for="ycoord">Y:</label><input type="number" id="ycoord" placeholder="Y...">
+        </div>
+        <table id="mapping" class="editable">
+            <thead>
+                <tr>
+                    <th>Point</th><th>Description</th><th>Direction</th><th>Magnitude</th><th>X</th><th>Y</th>
+                </tr>
+            </thead>
+        </table>
+        <button id="newrowbutton">New Row</button>
+        <script>
+            function selectRowForEdit(evt) {
+                console.log('Entered selectRowForEdit') ;
+                console.log(evt) ;
+                currentRow = evt.target ;
+
+                // TODO highlight the row that's being edited
+                
+
+                // copy data from the row
+                pointName.value = currentRow.cells[0].innerText ;
+                description.value = currentRow.cells[1].innerText ;
+                direction.value = currentRow.cells[2].innerText ;
+                magnitude.value = currentRow.cells[3].innerHTML ;
+                xcoord.value = currentRow.cells[4].innerText ;
+                ycoord.value = currentRow.cells[5].innerText ;
+                
+                // for (let index = 0; index < fields.length; index++) {
+                //     // const element = fields[index];
+                //     currentRow.cells[index] = fields[index].value ;
+                // }
+                // listen to changes to update other fields, then update the cells in the row
+
+            }
+            var currentRow ;
+
+            function addMappingRow(evt) {
+                row = table.insertRow() ;
+                row.insertCell() ; // point name
+                row.insertCell() ; // description
+                cell = row.insertCell(); cell.innerText = "0.0"; // direction
+                row.insertCell().innerText = "0" ;// magnitude
+                row.insertCell().innerText = "0.0" ;// x co-ordinate
+                row.insertCell().innerText = "0.0" ; // y co-ordinate
+
+                row.addEventListener("click", selectRowForEdit) ;
+                // put this row into the editing fields
+                row.click() ;
+            }
+
+            // function addData() {
+            //     // Get input values
+            //     let pointName = document.getElementById("pointName").value;
+            //     let description = document.getElementById("description").value;
+            //     let direction = document.getElementById("direction").value;
+            //     let magnitude = document.getElementById("magnitude").value;
+            //     let xcoord = document.getElementById("xcoord").value;
+            //     let ycoord = document.getElementById("ycoord").value;
+
+            //     // Get the table and insert a new row at the end
+            //     // let table = document.getElementById("outputTable");
+            //     let newRow = table.insertRow(table.rows.length);
+
+            //     // Insert data into cells of the new row
+            //     newRow.insertCell(0).innerHTML = pointName;
+            //     newRow.insertCell(1).innerHTML = description;
+            //     newRow.insertCell(2).innerHTML = direction;
+            //     newRow.insertCell(3).innerHTML = magnitude;
+            //     newRow.insertCell(4).innerHTML = xcoord;
+            //     newRow.insertCell(5).innerHTML = ycoord;
+            //     newRow.insertCell(6).innerHTML =
+            //         '<button onclick="editData(this)">Edit</button>' +
+            //         '<button onclick="deleteData(this)">Delete</button>';
+
+            //     // Clear input fields
+            //     clearInputs();
+            // }
+
+            // function editData(button) {
+
+            //     // Get the parent row of the clicked button
+            //     let row = button.parentNode.parentNode;
+
+            //     // Get the cells within the row
+            //     let pointNameCell = row.cells[0];
+            //     let descriptionCell = row.cells[1];
+            //     let directionCell = row.cells[2];
+            //     let magnitudeCell = row.cells[3];
+            //     let xcoordCell = row.cells[4];
+            //     let ycoordCell = row.cells[5];
+
+            //     // Prompt the user to enter updated values
+            //     let nameInput =
+            //         prompt("Enter the updated point name:",
+            //         pointNameCell.innerHTML);
+            //     let emailInput =
+            //         prompt("Enter the updated email:",
+            //             emailCell.innerHTML);
+            //     let numberInput =
+            //         prompt("Enter the updated mobile details:",
+            //             mobileCell.innerHTML
+            //         );
+            //     let addressInput =
+            //         prompt("Enter the updated address:",
+            //             addressCell.innerHTML
+            //         );
+
+            //     // Update the cell contents with the new values
+            //     nameCell.innerHTML = nameInput;
+            //     emailCell.innerHTML = emailInput;
+            //     mobileCell.innerHTML = numberInput;
+            //     addressCell.innerHTML = addressInput;
+            // }
+            // Get input fields
+            let pointName = document.getElementById("pointName");
+            let description = document.getElementById("description");
+            let direction = document.getElementById("direction");
+            let magnitude = document.getElementById("magnitude");
+            let xcoord = document.getElementById("xcoord");
+            let ycoord = document.getElementById("ycoord");
+
+            var titles = [ "Point Name", "Description", "Direction", "Magnitude", "X", "Y" ] ;
+            var attributes = [ "pointname", "description", "direction", "magnitude", "x", "y" ] ;
+
+            var table = document.getElementById("mapping"); 
+            var newrowbutton= document.getElementById("newrowbutton") ;
+            newrowbutton.addEventListener("click", addMappingRow);
+            // add an initial row
+            newrowbutton.click() ;
+        </script>
+
+<!--
         <h2>Tow</h2>
             <h3>Time</h3>
                 <h4>Tiny</h4>
@@ -40,6 +236,30 @@
         <h2>Stop</h2>
         <h2>Ready</h2>
             <h3>Ranger</h3>
+                <svg id="map" viewBox="0 0 100 100" width="250" height="250">
+                    <g>
+                        <line x1='10' y1='5' x2='0' y2='1'/>
+                        <line x1='20' y1='20' x2='100' y2='100'/>
+                    </g>
+                </svg>
+
+                <p>This is a red square: <canvas id="square" width=10 height=10></canvas>.
+                <p>This is a blue circle: <canvas id="circle" width=10 height=10></canvas>.
+                <script>
+                    let canvas = document.querySelector("#square");  // Get first canvas element
+                    let context = canvas.getContext("2d");           // Get 2D drawing context
+                    context.fillStyle = "#f00";                      // Set fill color to red
+                    context.fillRect(0,0,10,10);                     // Fill a square
+                    
+                    canvas = document.querySelector("#circle");      // Second canvas element
+                    context = canvas.getContext("2d");               // Get its context
+                    context.beginPath();                             // Begin a new "path"
+                    context.arc(5, 5, 5, 0, 2*Math.PI, true);        // Add a circle to the path
+                    context.fillStyle = "#00f";                      // Set blue fill color
+                    context.fill();                                  // Fill the path
+                </script>
+-->
     </body>
     <script src="scripts/TOC.js"></script>
+    
 </html>
