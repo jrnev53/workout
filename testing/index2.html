@@ -25,7 +25,12 @@
                 fill: #ffe
             }
 
-            #rowselected {
+            rowselected {
+                background-color: #6ccbfb;
+                color: #fff;
+            }
+
+            .rowselected {
                 background-color: #6ccbfb;
                 color: #fff;
             }
@@ -38,6 +43,7 @@
         <div id="formContainer">
             <label for="pointName">Point:</label><input type="text" id="pointName" placeholder="point...">
             <label for="description">Description:</label><input type="text" id="description" placeholder="description...">
+            <br/>
             <label for="direction">Direction:</label><input type="number" id="direction" placeholder="direction...">
             <label for="magnitude">Magnitude:</label><input type="number" id="magnitude" placeholder="magnitude...">
             <label for="xcoord">X:</label><input type="number" id="xcoord" placeholder="X...">
@@ -52,6 +58,22 @@
         </table>
         <button id="newrowbutton">New Row</button>
         <script>
+            // called when a editing field changes value
+            // Copies the changed value to the matching cell
+            // Refers to the currentRow variable
+            function copyChangedValue(evt) {
+                fieldChanged = evt.target ;
+                console.log(fieldChanged) ;
+                fieldName = fieldChanged.id ;
+                currentRow.cells[fieldChanged.cellNumber].innerHTML = fieldChanged.value ;
+                console.log(fieldName + "  value set to " + fieldChanged.value) ;
+                // if (fieldName == "pointName") {
+                //     currentRow.cells[fieldChanged.cellNumber].innerHTML = fieldChanged.value ;
+                //     // currentRow.cells[0].innerHTML = fieldChanged.value ;
+                //     console.log("cell value set to " + fieldChanged.value) ;
+                // }
+            }
+
             function selectRowForEdit(evt) {
                 console.log('Entered selectRowForEdit') ;
                 // console.log(evt) ;
@@ -62,16 +84,22 @@
                 currentRow = evt.target.parentElement ;
                 // console.log(currentRow) ;
 
-                // // TODO highlight the row that's being edited
+                // highlight the row that's being edited
+                console.log(currentRow.parentElement) ;
+                rows = currentRow.parentElement.rows ;
+                for (let index = 0; index < rows.length; index++) {
+                    row = rows[index];
+                    row.className = '' ;
+                }
                 currentRow.className = 'rowselected' ;
 
                 // copy data from the row
-                pointName.value = currentRow.cells[0].innerText ;
-                description.value = currentRow.cells[1].innerText ;
-                direction.value = currentRow.cells[2].innerText ;
-                magnitude.value = currentRow.cells[3].innerHTML ;
-                xcoord.value = currentRow.cells[4].innerText ;
-                ycoord.value = currentRow.cells[5].innerText ;
+                pointName.value = currentRow.cells[pointName.cellNumber].innerText ;
+                description.value = currentRow.cells[description.cellNumber].innerText ;
+                direction.value = currentRow.cells[direction.cellNumber].innerText ;
+                magnitude.value = currentRow.cells[magnitude.cellNumber].innerHTML ;
+                xcoord.value = currentRow.cells[xcoord.cellNumber].innerText ;
+                ycoord.value = currentRow.cells[ycoord.cellNumber].innerText ;
                 
                 // for (let index = 0; index < fields.length; index++) {
                 //     // const element = fields[index];
@@ -85,7 +113,8 @@
             function addMappingRow(evt) {
                 console.log('Entered addMappingRow') ;
                 row = table.insertRow() ;
-                row.insertCell() ; // point name
+                pointNameCell = row.insertCell() ; // point name
+                pointNameCell.editField = pointName ;
                 row.insertCell() ; // description
                 row.insertCell().innerText = "0.0"; // direction
                 row.insertCell().innerText = "0" ;// magnitude
@@ -95,18 +124,32 @@
 
                 row.addEventListener("click", selectRowForEdit) ;
                 // put this row into the editing fields
-                row.click() ;
+                pointNameCell.click() ;
                 console.log('Exiting addMappingRow') ;
             }
 
             var currentRow ;
+
             // Get input fields
             let pointName = document.getElementById("pointName");
+            pointName.cellNumber = 0 ;
             let description = document.getElementById("description");
+            description.cellNumber = 1 ;
             let direction = document.getElementById("direction");
+            direction.cellNumber = 2 ;
             let magnitude = document.getElementById("magnitude");
+            magnitude.cellNumber = 3
             let xcoord = document.getElementById("xcoord");
+            xcoord.cellNumber = 4
             let ycoord = document.getElementById("ycoord");
+            ycoord.cellNumber = 5 ;
+
+            pointName.addEventListener("change", copyChangedValue) ;
+            description.addEventListener("change", copyChangedValue) ;
+            direction.addEventListener("change", copyChangedValue) ;
+            magnitude.addEventListener("change", copyChangedValue) ;
+            xcoord.addEventListener("change", copyChangedValue) ;
+            ycoord.addEventListener("change", copyChangedValue) ;
 
             var titles = [ "Point Name", "Description", "Direction", "Magnitude", "X", "Y" ] ;
             var attributes = [ "pointname", "description", "direction", "magnitude", "x", "y" ] ;
