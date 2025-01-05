@@ -1,4 +1,4 @@
-package jakcan.blueprint;
+package jakcan.model3d;
 
 import java.util.HashMap;
 import java.util.HashSet;

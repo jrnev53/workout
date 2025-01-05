@@ -5,9 +5,10 @@ import java.io.IOException;
 
 import org.json.JSONObject;
 
-import jakcan.blueprint.Blueprint;
-import jakcan.blueprint.Named3dPoint;
 import jakcan.geodesic.RegularIcosahedron;
+import jakcan.model3d.Box;
+import jakcan.model3d.Cube;
+import jakcan.model3d.Model3D;
 
 public class Main {
     public static void main(String[] args) {
@@ -15,75 +16,39 @@ public class Main {
 
         boolean createGeo = true ;
         boolean createCube = false ;
-        Blueprint bp;
+        Model3D model;
 
         if (createGeo)
-            bp = new Blueprint(RegularIcosahedron.getPoints().values(), RegularIcosahedron.getEdges(),"Regular Icosahedron");
+            model = RegularIcosahedron.getModel() ;
         else if (createCube) {
             // create cube
-            bp = new Blueprint();
-            bp.addPoint("A", 2.0, 2.0, 2.0);
-            bp.addPoint("B", 2.0, -2.0, 2.0);
-            bp.addPoint("C", -2.0, -2.0, 2.0);
-            bp.addPoint("D", -2.0, 2.0, 2.0);
-            bp.addPoint("E", 2.0, 2.0, -2.0);
-            bp.addPoint("F", 2.0, -2.0, -2.0);
-            bp.addPoint("G", -2.0, -2.0, -2.0);
-            bp.addPoint("H", -2.0, 2.0, -2.0);
-            bp.addEdge("C","D") ;
-            bp.addEdge("A","D") ;
-            bp.addEdge("D","H") ;
-            bp.addEdge("C","B") ;
-
-            bp.addEdge("C","G") ;
-            bp.addEdge("C","D") ;
-            bp.addEdge("A","B") ;
-            bp.addEdge("B","F") ;
-
-            bp.addEdge("A","E") ;
-            bp.addEdge("F","E") ;
-            bp.addEdge("H","E") ;
-            bp.addEdge("H","G") ;
-            bp.addEdge("F","G") ;
+            model = Cube.createModel(2.0) ;
         }
         else
         {
-            bp = new Blueprint();
-            bp.addPoint("A", 3.0, 3.0, 2.0);
-            bp.addPoint("B", 3.0, -3.0, 2.0);
-            bp.addPoint("C", -3.0, -3.0, 2.0);
-            bp.addPoint("D", -3.0, 3.0, 2.0);
-            bp.addPoint("E", 3.0, 3.0, -2.0);
-            bp.addPoint("F", 3.0, -3.0, -2.0);
-            bp.addPoint("G", -3.0, -3.0, -2.0);
-            bp.addPoint("H", -3.0, 3.0, -2.0);
-            bp.addEdge("C","D") ;
-            bp.addEdge("A","D") ;
-            bp.addEdge("D","H") ;
-            bp.addEdge("C","B") ;
-
-            bp.addEdge("C","G") ;
-            bp.addEdge("C","D") ;
-            bp.addEdge("A","B") ;
-            bp.addEdge("B","F") ;
-
-            bp.addEdge("A","E") ;
-            bp.addEdge("F","E") ;
-            bp.addEdge("H","E") ;
-            bp.addEdge("H","G") ;
-            bp.addEdge("F","G") ;
+            model = Box.createModel(2.0, 3.0) ;
         }
 
         // Move point A to the top
-        bp.rotateToTop("A") ;
+        model.rotateToTop("A") ;
 
+        // TODO define faces and print
+        // RegularIcosahedron - add face data
+        // here - Create a Blueprint from the Model3D, print only faces, 
+        // Things in models have labels, things in blueprints can be assigned a color.
+        // Blueprints have printing info, Models don't? Models have blueprints?
+
+        // DONE Scale the size
+        // define the model as four meters high
+        // model.scale(4.0 / model.getGreatestZ()) ;
         // TODO Implement V2 and V3
         // TODO Remove lower points 
         // TODO move figure to xy plane
         // TODO generate parts list
+        // TODO Define the doorway
 
         // Create a JSON object
-        JSONObject jsonObject = bp.writeToJSON();
+        JSONObject jsonObject = model.writeToJSON();
 
         try (FileWriter file = new FileWriter("data.json")) {
             // Write the JSON object to file

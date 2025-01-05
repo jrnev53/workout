@@ -1,4 +1,10 @@
-package jakcan.blueprint;
+package jakcan.model3d;
+
+/**
+ * This class stores the points, edges, and faces that make up a 3D model.
+ * 
+ * @author John Neville
+ */
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -7,19 +13,24 @@ import java.util.Map;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-public class Blueprint {
+public class Model3D {
     private Map<String, Named3dPoint> points;
     private Edges edges;
     private String title ;
-    public static Named3dPoint ORIGIN = new Named3dPoint("ORIGIN", 0.0, 0.0, 0.0);
+    private Map<String, Face> faces ;
+    /** When true, Edges will be created when a face is defined */
+    private boolean edgesWithFace = true ;
 
-    public Blueprint() {
+    public static Named3dPoint ORIGIN_PT = new Named3dPoint("ORIGIN", 0.0, 0.0, 0.0);
+
+    public Model3D() {
         points = new HashMap<>();
         edges = new Edges();
-        title = "Blueprint" ;
+        title = "3D Model" ;
+        faces = new HashMap<>() ;
     }
 
-    public Blueprint(Collection<Named3dPoint> points, Edges edges) {
+    public Model3D(Collection<Named3dPoint> points, Edges edges) {
         this() ;
 
         for (Named3dPoint pt : points) {
@@ -29,7 +40,7 @@ public class Blueprint {
         this.edges.putAll(edges);
     }
 
-    public Blueprint(Collection<Named3dPoint> points, Edges edges, String title) {
+    public Model3D(Collection<Named3dPoint> points, Edges edges, String title) {
         this(points, edges) ;
         this.title = title ;
     }
@@ -62,6 +73,24 @@ public class Blueprint {
         // edges
         JSONArray edgesJSON = edges.writeToJSON();
         jsonObject.put("edges", edgesJSON);
+
+        // faces
+        if (! faces.isEmpty())
+        {
+            JSONArray jsonFaces = new JSONArray() ;
+            for (Face face : faces.values())
+            {
+                JSONObject json_face = new JSONObject() ;
+                json_face.put("name", face.getName()) ;
+                JSONArray outline = new JSONArray() ;
+                for (Named3dPoint pt: face.getPoints()) {
+                    outline.put(pt.name) ;
+                }
+                json_face.put("outline", outline) ;
+                jsonFaces.put(json_face) ;
+            }
+            jsonObject.put("faces", jsonFaces) ;
+        }
 
         return jsonObject;
     }
@@ -108,7 +137,7 @@ public class Blueprint {
         Named3dPoint topPt = getPoints().get("A");
         // System.out.println("Top Point: " + topPt) ;
 
-        Double offAngle = getAngleYZ(topPt, Blueprint.ORIGIN);
+        Double offAngle = getAngleYZ(topPt, Model3D.ORIGIN_PT);
         // System.out.println("YZ Off Angle is " + Math.toDegrees(offAngle));
 
         // To move the point to the top, rotate so that the angle between it an the
@@ -122,7 +151,7 @@ public class Blueprint {
         // System.out.println("Top Point: " + topPt) ;
 
         // now do the XZ plane
-        offAngle = getAngleXZ(topPt, Blueprint.ORIGIN) ;
+        offAngle = getAngleXZ(topPt, Model3D.ORIGIN_PT) ;
         // moveAngle = Math.toRadians(90.0) - offAngle;
         moveAngle = - offAngle;
         // moveAngle = offAngle;
@@ -176,4 +205,63 @@ public class Blueprint {
             pt.y = pt.y + dy ;
         }
     }
+
+    public void setTitle(String title) {
+        this.title = title ;
+    }
+
+    /**
+     * Returns the highest Z value of the points.
+     * @return
+     */
+    public Double getGreatestZ() {
+        Double ret = null ;
+
+        for (Named3dPoint pt : points.values())
+        {
+            if (ret == null)
+            {
+                ret = pt.z ;
+            }
+            else if ((pt.z != null) && (pt.z > ret))
+            {
+                ret = pt.z ;
+            }
+        }
+
+        return ret ;
+    }
+
+    /**
+     * Expand the model by the factor given
+     * @param scaleFactor
+     */
+    public void scale(double scaleFactor) {
+        for (Named3dPoint pt : points.values()) {
+            pt.x = pt.x * scaleFactor ;
+            pt.y = pt.y * scaleFactor ;
+            pt.z = pt.z * scaleFactor ;
+        }
+    }
+
+    public Named3dPoint getPoint(String ptName) {
+        return points.get(ptName) ;
+    }
+
+    public void addFace(String p1name, String p2name, String p3name) {
+        String faceName = p1name + p2name + p3name ;
+        Face face = new Face(faceName, points.get(p1name), points.get(p2name), points.get(p3name)) ;
+        faces.put(faceName, face) ;
+
+        if (edgesWithFace) {
+            addEdge(p1name, p2name) ;
+            addEdge(p2name, p3name) ;
+            addEdge(p3name, p1name) ;
+        }
+    }
+
+    public void setEdgesWithFace(boolean edgesWithFace) {
+        this.edgesWithFace = edgesWithFace;
+    }
+
 }

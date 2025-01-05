@@ -51,24 +51,24 @@ for edge in bp['edges']:
     )
     data = data + [newline]
 
-# add the data to the figure
-fig = go.Figure(data)
+# shade the AEF triangle
+# Create the triangle by specifying the indices of the points
+i, j, k = [0, 1, 2], [1, 2, 0], [2, 0, 1]  # These define how points connect
 
-# # shade the AEF triangle
-# points = [ gd[0], gd[4], gd[5] ]
-# # Create the triangle by specifying the indices of the points
-# i, j, k = [0, 1, 2], [1, 2, 0], [2, 0, 1]  # These define how points connect
-
-# fig = go.Figure(data= data + [
-#     go.Mesh3d(
-#         x=[p['x'] for p in points],
-#         y=[p['y'] for p in points],
-#         z=[p['z'] for p in points],
-#         i=i, j=j, k=k,
-#         color='lightblue',
-#         opacity=0.5
-#     )
-# ])
+for face in bp['faces']:
+    points = []
+    for ptname in face['outline'] :
+        points = points + [ ptDict.get(ptname) ] ;
+    data= data + [
+        go.Mesh3d(
+            x=[p['x'] for p in points],
+            y=[p['y'] for p in points],
+            z=[p['z'] for p in points],
+            i=i, j=j, k=k,
+            color='lightblue',
+            opacity=0.5
+        )
+    ]
 
 # Update layout for better visualization
 # fig.update_layout(
@@ -80,6 +80,9 @@ fig = go.Figure(data)
 #     width=700,
 #     margin=dict(r=10, l=10, b=10, t=10)
 # )
+
+# add the data to the figure
+fig = go.Figure(data)
 
 fig.update_layout(scene=dict(
     xaxis_title='X Axis',

@@ -1,4 +1,4 @@
-package jakcan.blueprint;
+package jakcan.model3d;
 
 // The name of the point will be immutable, but it's position is changeable.
 public class Named3dPoint {
