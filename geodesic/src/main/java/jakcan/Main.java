@@ -5,6 +5,7 @@ import java.io.IOException;
 
 import org.json.JSONObject;
 
+import jakcan.geodesic.Geodesic;
 import jakcan.geodesic.RegularIcosahedron;
 import jakcan.model3d.Box;
 import jakcan.model3d.Cube;
@@ -40,11 +41,14 @@ public class Main {
 
         // DONE Scale the size
         // define the model as four meters high
-        // model.scale(4.0 / model.getGreatestZ()) ;
+        model.scale(4.0 / model.getGreatestZ()) ;
+        
         // TODO Implement V2 and V3
         // TODO Remove lower points 
-        // TODO move figure to xy plane
+        // TODO move figure to xy plane - move z by an offset.
         // TODO generate parts list
+        Geodesic g = new Geodesic() ;
+        System.out.println(g.generatePartsList(model)) ;
         // TODO Define the doorway
 
         // Create a JSON object

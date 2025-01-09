@@ -102,4 +102,8 @@ public class Edges {
 
         return ret ;
     }
+
+    public Map<Named3dPoint, Set<Named3dPoint>> getEdges() {
+        return edges ;
+    }
 }

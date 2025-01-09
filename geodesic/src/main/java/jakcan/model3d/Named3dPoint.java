@@ -26,4 +26,12 @@ public class Named3dPoint {
         return y ;
     }
 
+    public String getName() {
+        return name ;
+    }
+
+    public Double getZ() {
+        return z ;
+    }
+
 }
