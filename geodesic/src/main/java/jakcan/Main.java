@@ -15,9 +15,9 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Starting this test.");
 
-        boolean createGeo = false ;
+        boolean createGeo = true ;
         boolean createCube = false ;
-        boolean createRI_2V = true ;
+        boolean createRI_2V = false ;
         Model3D model;
 
         if (createRI_2V)
@@ -37,11 +37,10 @@ public class Main {
         model.rotateToTop("A") ;
 
         // define the model as four meters high
-        // model.scale(4.0 / model.getGreatestZ()) ;
+        model.scale(4.0 / model.getGreatestZ()) ;
 
         // DONE define faces and print
         // DONE Scale the size
-        model.scale(4.0 / model.getGreatestZ()) ;
         
         // TODO Implement V2 and V3
 

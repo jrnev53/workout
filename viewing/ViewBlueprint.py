@@ -54,6 +54,8 @@ for edge in bp['edges']:
 # shade the AEF triangle
 # Create the triangle by specifying the indices of the points
 i, j, k = [0, 1, 2], [1, 2, 0], [2, 0, 1]  # These define how points connect
+color=[ 'lightblue', 'blue', 'linen', 'pink', 'grey', 'snow', 'red' ]
+cnum=0
 
 for face in bp['faces']:
     points = []
@@ -65,10 +67,11 @@ for face in bp['faces']:
             y=[p['y'] for p in points],
             z=[p['z'] for p in points],
             i=i, j=j, k=k,
-            color='lightblue',
+            color=color[cnum],
             opacity=0.5
         )
     ]
+    cnum = (cnum + 1) % 7
 
 # Update layout for better visualization
 # fig.update_layout(
