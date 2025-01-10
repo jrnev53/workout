@@ -41,11 +41,15 @@ public class Main {
 
         // DONE define faces and print
         // DONE Scale the size
+        model.scale(4.0 / model.getGreatestZ()) ;
+        
         // TODO Implement V2 and V3
 
         // TODO Remove lower points 
-        // TODO move figure to xy plane
+        // TODO move figure to xy plane - move z by an offset.
         // TODO generate parts list
+        Geodesic g = new Geodesic() ;
+        System.out.println(g.generatePartsList(model)) ;
         // TODO Define the doorway
 
         // Create a JSON object
