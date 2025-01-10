@@ -1,4 +1,6 @@
-package jakcan.model3d;
+package jakcan.geodesic;
+
+import jakcan.model3d.Model3D;
 
 public class Box {
 

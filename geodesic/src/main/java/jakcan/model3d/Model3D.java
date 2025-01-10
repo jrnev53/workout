@@ -8,6 +8,7 @@ package jakcan.model3d;
 
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -16,22 +17,22 @@ import org.json.JSONObject;
 public class Model3D {
     private Map<String, Named3dPoint> points;
     private Edges edges;
-    private String title ;
-    private Map<String, Face> faces ;
+    private String title;
+    private Map<String, Face> faces;
     /** When true, Edges will be created when a face is defined */
-    private boolean edgesWithFace = true ;
+    private boolean edgesWithFace = true;
 
     public static Named3dPoint ORIGIN_PT = new Named3dPoint("ORIGIN", 0.0, 0.0, 0.0);
 
     public Model3D() {
         points = new HashMap<>();
         edges = new Edges();
-        title = "3D Model" ;
-        faces = new HashMap<>() ;
+        title = "3D Model";
+        faces = new HashMap<>();
     }
 
     public Model3D(Collection<Named3dPoint> points, Edges edges) {
-        this() ;
+        this();
 
         for (Named3dPoint pt : points) {
             this.points.put(pt.name, pt);
@@ -41,8 +42,8 @@ public class Model3D {
     }
 
     public Model3D(Collection<Named3dPoint> points, Edges edges, String title) {
-        this(points, edges) ;
-        this.title = title ;
+        this(points, edges);
+        this.title = title;
     }
 
     public Map<String, Named3dPoint> getPoints() {
@@ -56,7 +57,7 @@ public class Model3D {
     public JSONObject writeToJSON() {
         // Create a JSON object
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("title", title) ;
+        jsonObject.put("title", title);
 
         // write out points
         JSONArray jsonPts = new JSONArray();
@@ -75,21 +76,19 @@ public class Model3D {
         jsonObject.put("edges", edgesJSON);
 
         // faces
-        if (! faces.isEmpty())
-        {
-            JSONArray jsonFaces = new JSONArray() ;
-            for (Face face : faces.values())
-            {
-                JSONObject json_face = new JSONObject() ;
-                json_face.put("name", face.getName()) ;
-                JSONArray outline = new JSONArray() ;
-                for (Named3dPoint pt: face.getPoints()) {
-                    outline.put(pt.name) ;
+        if (!faces.isEmpty()) {
+            JSONArray jsonFaces = new JSONArray();
+            for (Face face : faces.values()) {
+                JSONObject json_face = new JSONObject();
+                json_face.put("name", face.getName());
+                JSONArray outline = new JSONArray();
+                for (Named3dPoint pt : face.getPoints()) {
+                    outline.put(pt.name);
                 }
-                json_face.put("outline", outline) ;
-                jsonFaces.put(json_face) ;
+                json_face.put("outline", outline);
+                jsonFaces.put(json_face);
             }
-            jsonObject.put("faces", jsonFaces) ;
+            jsonObject.put("faces", jsonFaces);
         }
 
         return jsonObject;
@@ -99,17 +98,17 @@ public class Model3D {
         addPoint(new Named3dPoint(name, x, y, z));
     }
 
-    private void addPoint(Named3dPoint pt) {
+    public void addPoint(Named3dPoint pt) {
         points.put(pt.name, pt);
     }
 
     public void rotateYZ(Double moveAngle) {
         // Apply this angle change to all points
-        Double cosAngle = Math.cos(moveAngle) ;
-        Double sinAngle = Math.sin(moveAngle) ;
+        Double cosAngle = Math.cos(moveAngle);
+        Double sinAngle = Math.sin(moveAngle);
         for (Named3dPoint pt : points.values()) {
-            Double oldx = pt.y ;
-            Double oldy = pt.z ;
+            Double oldx = pt.y;
+            Double oldy = pt.z;
             pt.y = (oldx * cosAngle) - (oldy * sinAngle);
             pt.z = (oldx * sinAngle) + (oldy * cosAngle);
         }
@@ -117,11 +116,11 @@ public class Model3D {
 
     public void rotateY(Double moveAngle) {
         // Apply this angle change to all points
-        Double cosAngle = Math.cos(moveAngle) ;
-        Double sinAngle = Math.sin(moveAngle) ;
+        Double cosAngle = Math.cos(moveAngle);
+        Double sinAngle = Math.sin(moveAngle);
         for (Named3dPoint pt : points.values()) {
-            Double oldx = pt.x ;
-            Double oldz = pt.z ;
+            Double oldx = pt.x;
+            Double oldz = pt.z;
             pt.x = (oldx * cosAngle) + (oldz * sinAngle);
             pt.z = (-oldx * sinAngle) + (oldz * cosAngle);
         }
@@ -147,16 +146,17 @@ public class Model3D {
         // System.out.println("Move angle is " + Math.toDegrees(moveAngle));
 
         // Apply this angle change to all points
-        rotateYZ(moveAngle) ;
+        rotateYZ(moveAngle);
         // System.out.println("Top Point: " + topPt) ;
 
         // now do the XZ plane
-        offAngle = getAngleXZ(topPt, Model3D.ORIGIN_PT) ;
+        offAngle = getAngleXZ(topPt, Model3D.ORIGIN_PT);
         // moveAngle = Math.toRadians(90.0) - offAngle;
-        moveAngle = - offAngle;
+        moveAngle = -offAngle;
         // moveAngle = offAngle;
-        // System.out.println("XZ Off Angle is " + offAngle + ", in degrees that's " + Math.toDegrees(offAngle));
-        rotateY(moveAngle) ;
+        // System.out.println("XZ Off Angle is " + offAngle + ", in degrees that's " +
+        // Math.toDegrees(offAngle));
+        rotateY(moveAngle);
         // System.out.println("Top Point: " + topPt) ;
     }
 
@@ -196,72 +196,91 @@ public class Model3D {
 
     public void moveX(Double dx) {
         for (Named3dPoint pt : points.values()) {
-            pt.x = pt.x + dx ;
+            pt.x = pt.x + dx;
         }
     }
 
     public void moveY(Double dy) {
         for (Named3dPoint pt : points.values()) {
-            pt.y = pt.y + dy ;
+            pt.y = pt.y + dy;
         }
     }
 
     public void setTitle(String title) {
-        this.title = title ;
+        this.title = title;
     }
 
     /**
      * Returns the highest Z value of the points.
+     * 
      * @return
      */
     public Double getGreatestZ() {
-        Double ret = null ;
+        Double ret = null;
 
-        for (Named3dPoint pt : points.values())
-        {
-            if (ret == null)
-            {
-                ret = pt.z ;
-            }
-            else if ((pt.z != null) && (pt.z > ret))
-            {
-                ret = pt.z ;
+        for (Named3dPoint pt : points.values()) {
+            if (ret == null) {
+                ret = pt.z;
+            } else if ((pt.z != null) && (pt.z > ret)) {
+                ret = pt.z;
             }
         }
 
-        return ret ;
+        return ret;
     }
 
     /**
      * Expand the model by the factor given
+     * 
      * @param scaleFactor
      */
     public void scale(double scaleFactor) {
         for (Named3dPoint pt : points.values()) {
-            pt.x = pt.x * scaleFactor ;
-            pt.y = pt.y * scaleFactor ;
-            pt.z = pt.z * scaleFactor ;
+            pt.x = pt.x * scaleFactor;
+            pt.y = pt.y * scaleFactor;
+            pt.z = pt.z * scaleFactor;
         }
     }
 
     public Named3dPoint getPoint(String ptName) {
-        return points.get(ptName) ;
+        return points.get(ptName);
     }
 
     public void addFace(String p1name, String p2name, String p3name) {
-        String faceName = p1name + p2name + p3name ;
-        Face face = new Face(faceName, points.get(p1name), points.get(p2name), points.get(p3name)) ;
-        faces.put(faceName, face) ;
+        String faceName = p1name + p2name + p3name;
+        Face face = new Face(faceName, points.get(p1name), points.get(p2name), points.get(p3name));
+        faces.put(faceName, face);
 
         if (edgesWithFace) {
-            addEdge(p1name, p2name) ;
-            addEdge(p2name, p3name) ;
-            addEdge(p3name, p1name) ;
+            addEdge(p1name, p2name);
+            addEdge(p2name, p3name);
+            addEdge(p3name, p1name);
         }
     }
 
     public void setEdgesWithFace(boolean edgesWithFace) {
         this.edgesWithFace = edgesWithFace;
+    }
+
+    public Map<String, Face> getFaces() {
+        return this.faces;
+    }
+
+    public void addFace(Named3dPoint a, Named3dPoint b, Named3dPoint c) {
+        addFace(a.name, b.name, c.name);
+    }
+
+    public void removeFace(String oldFaceName) {
+        Face oldFace = faces.remove(oldFaceName);
+        List<Named3dPoint> outline = oldFace.getPoints();
+        if (edgesWithFace) {
+            for (int i = 1; i < outline.size(); i++) {
+
+                edges.remove(outline.get(i - 1), outline.get(i));
+            }
+            edges.remove(outline.get(outline.size() - 1), outline.get(0));
+        }
+
     }
 
 }

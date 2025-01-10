@@ -5,20 +5,24 @@ import java.io.IOException;
 
 import org.json.JSONObject;
 
+import jakcan.geodesic.Box;
+import jakcan.geodesic.Cube;
+import jakcan.geodesic.Geodesic;
 import jakcan.geodesic.RegularIcosahedron;
-import jakcan.model3d.Box;
-import jakcan.model3d.Cube;
 import jakcan.model3d.Model3D;
 
 public class Main {
     public static void main(String[] args) {
         System.out.println("Starting this test.");
 
-        boolean createGeo = true ;
+        boolean createGeo = false ;
         boolean createCube = false ;
+        boolean createRI_2V = true ;
         Model3D model;
 
-        if (createGeo)
+        if (createRI_2V)
+            model = Geodesic.getModel(2) ;
+        else if (createGeo)
             model = RegularIcosahedron.getModel() ;
         else if (createCube) {
             // create cube
@@ -32,16 +36,13 @@ public class Main {
         // Move point A to the top
         model.rotateToTop("A") ;
 
-        // TODO define faces and print
-        // RegularIcosahedron - add face data
-        // here - Create a Blueprint from the Model3D, print only faces, 
-        // Things in models have labels, things in blueprints can be assigned a color.
-        // Blueprints have printing info, Models don't? Models have blueprints?
-
-        // DONE Scale the size
         // define the model as four meters high
         // model.scale(4.0 / model.getGreatestZ()) ;
+
+        // DONE define faces and print
+        // DONE Scale the size
         // TODO Implement V2 and V3
+
         // TODO Remove lower points 
         // TODO move figure to xy plane
         // TODO generate parts list

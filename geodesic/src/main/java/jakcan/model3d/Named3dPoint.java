@@ -26,4 +26,8 @@ public class Named3dPoint {
         return y ;
     }
 
+    public Double getZ() {
+        return z ;
+    }
+
 }
