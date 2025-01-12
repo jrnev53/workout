@@ -15,9 +15,9 @@ public class Main {
     public static void main(String[] args) {
         System.out.println("Starting this test.");
 
-        boolean createGeo = true ;
+        boolean createGeo = false ;
         boolean createCube = false ;
-        boolean createRI_2V = false ;
+        boolean createRI_2V = true ;
         Model3D model;
 
         if (createRI_2V)
@@ -42,7 +42,8 @@ public class Main {
         // DONE define faces and print
         // DONE Scale the size
         
-        // TODO Implement V2 and V3
+        // DONE Implement V2
+        // TODO Implement V3
 
         // TODO Remove lower points 
         // TODO move figure to xy plane - move z by an offset.

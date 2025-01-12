@@ -30,8 +30,50 @@ public class Geodesic {
         return model;
     }
 
+    /**
+     * Change this model to a frequency 3 geodesic.
+     * 
+     * @param model A model of the RegularIcosahedron.
+     */
     private static void frequency3(Model3D model) {
-        throw new UnsupportedOperationException("Unimplemented method 'frequency3'");
+        // make a copy of faces in the model before
+        Map<String, Face> oldFaces = new HashMap<>(model.getFaces());
+
+        Double radius = null ;
+        // add new points & faces
+        for (Face face : oldFaces.values()) {
+            List<Named3dPoint> outline = face.getPoints();
+            Named3dPoint p1 = outline.get(0);
+            Named3dPoint p2 = outline.get(1);
+            Named3dPoint p3 = outline.get(2);
+
+            if (radius == null) {
+                radius = p1.getRadius() ;
+            }
+
+            // split each side of the original triangle into three pieces
+            // qqqq Move midpointBetween to Named3dPoint?
+            // qqqq Label these new points as "frequency points", and color differently in the output.
+            Named3dPoint q1 = midpointBetween(p1, p2);
+            q1.setVectorLength(radius) ;
+            Named3dPoint q2 = midpointBetween(p2, p3);
+            q2.setVectorLength(radius) ;
+            Named3dPoint q3 = midpointBetween(p3, p1);
+            q3.setVectorLength(radius) ;
+            model.addPoint(q1);
+            model.addPoint(q2);
+            model.addPoint(q3);
+
+            model.addFace(p1, q1, q3);
+            model.addFace(q1, p2, q2);
+            model.addFace(q2, q3, q1);
+            model.addFace(q3, q2, p3);
+        }
+
+        // delete the original faces (and edges), but not the points.
+        for (String oldFaceName : oldFaces.keySet()){
+            model.removeFace(oldFaceName) ;
+        }
     }
 
     private static int vertexNum = 0;
@@ -45,6 +87,7 @@ public class Geodesic {
         // make a copy of faces in the model before
         Map<String, Face> oldFaces = new HashMap<>(model.getFaces());
 
+        Double radius = null ;
         // add new points & faces
         for (Face face : oldFaces.values()) {
             List<Named3dPoint> outline = face.getPoints();
@@ -52,18 +95,24 @@ public class Geodesic {
             Named3dPoint p2 = outline.get(1);
             Named3dPoint p3 = outline.get(2);
 
-            // FIXME Move midpointBetween to Named3dPoint?
-            // FIXME The function midpointBetween can't be right, want point on the sphere!!
-            // FIXME Label these new points as "frequency points", and color differently in the output.
+            if (radius == null) {
+                radius = p1.getRadius() ;
+            }
+
+            // qqqq Move midpointBetween to Named3dPoint?
+            // qqqq Label these new points as "frequency points", and color differently in the output.
             Named3dPoint q1 = midpointBetween(p1, p2);
+            q1.setVectorLength(radius) ;
             Named3dPoint q2 = midpointBetween(p2, p3);
+            q2.setVectorLength(radius) ;
             Named3dPoint q3 = midpointBetween(p3, p1);
+            q3.setVectorLength(radius) ;
             model.addPoint(q1);
             model.addPoint(q2);
             model.addPoint(q3);
 
             model.addFace(p1, q1, q3);
-            model.addFace(q1, p2, q3);
+            model.addFace(q1, p2, q2);
             model.addFace(q2, q3, q1);
             model.addFace(q3, q2, p3);
         }

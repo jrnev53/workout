@@ -34,4 +34,23 @@ public class Named3dPoint {
         return z ;
     }
 
+    /**
+     * Returns the distance of this point to the origin.
+     */
+    public Double getRadius() {
+        return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2) + Math.pow(z, 2)) ;
+    }
+
+    /**
+     * Extend this point from the origin so that it's length matches the radius
+     * @param radius
+     */
+    public void setVectorLength(Double radius) {
+        Double originalLen = getRadius() ;
+        Double ratio = radius /originalLen ;
+        x = x * ratio ;
+        y = y * ratio ;
+        z = z * ratio ;
+    }
+
 }

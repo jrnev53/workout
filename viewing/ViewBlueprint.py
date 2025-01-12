@@ -67,8 +67,8 @@ for face in bp['faces']:
             y=[p['y'] for p in points],
             z=[p['z'] for p in points],
             i=i, j=j, k=k,
-            color=color[cnum],
-            opacity=0.5
+            color=color[0],
+            opacity=1.0
         )
     ]
     cnum = (cnum + 1) % 7

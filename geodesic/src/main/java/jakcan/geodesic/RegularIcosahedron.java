@@ -28,46 +28,6 @@ public class RegularIcosahedron {
             model.addPoint("K", -golden_ratio, 0.0, 1.0);
             model.addPoint("L", -golden_ratio, 0.0, -1.0);
 
-            // model.addEdge("A", "B");
-            // model.addEdge("A", "E");
-            // model.addEdge("A", "F");
-            // model.addEdge("A", "I");
-            // model.addEdge("A", "K");
-
-            // model.addEdge("B", "G");
-            // model.addEdge("B", "H");
-            // model.addEdge("B", "I");
-            // model.addEdge("B", "K");
-
-            // model.addEdge("C", "D");
-            // model.addEdge("C", "E");
-            // model.addEdge("C", "F");
-            // model.addEdge("C", "J");
-            // model.addEdge("C", "L");
-
-            // model.addEdge("D", "G");
-            // model.addEdge("D", "H");
-            // model.addEdge("D", "J");
-            // model.addEdge("D", "L");
-
-            // model.addEdge("E", "F");
-            // model.addEdge("E", "I");
-            // model.addEdge("E", "J");
-
-            // model.addEdge("F", "K");
-            // model.addEdge("F", "L");
-
-            // model.addEdge("G", "H");
-            // model.addEdge("G", "I");
-            // model.addEdge("G", "J");
-
-            // model.addEdge("H", "K");
-            // model.addEdge("H", "L");
-
-            // model.addEdge("I", "J");
-
-            // model.addEdge("K", "L");
-
             model.setTitle("Regular Icosahedron");
 
             model.addFace("A", "E", "F") ;
@@ -92,6 +52,8 @@ public class RegularIcosahedron {
             model.addFace("H", "D", "G") ;
             model.addFace("G", "D", "J") ;
             model.addFace("J", "D", "C") ;
+
+            model.addFace("K", "H", "B") ;
         }
 
         return model;
